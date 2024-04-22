@@ -1,10 +1,7 @@
 <?php
-
 namespace Product\Announcer\Classes;
-
 class EmailFromOrder
 {
-
     protected $wpdb;
     public function __construct() {
         global $wpdb;
@@ -28,21 +25,21 @@ class EmailFromOrder
 
     }
     public function find_similar_product_titles($product_title, $threshold = 0.6) {
-        global $wpdb;
+//        global $wpdb;
 
         // Escape the product title to prevent SQL injection
-        $product_title = $wpdb->esc_like($product_title);
+        $product_title = $this->wpdb->esc_like($product_title);
 
         // Build the SQL query to retrieve similar product titles
         $sql = "
         SELECT post_title
-        FROM {$wpdb->posts}
+        FROM {$this->wpdb->posts}
         WHERE post_type = 'product'
         AND post_status = 'publish'
     ";
 
         // Execute the SQL query
-        $product_titles = $wpdb->get_col($sql);
+        $product_titles = $this->wpdb->get_col($sql);
 
         // Find similar product titles based on Levenshtein distance
         $similar_titles = array();
@@ -58,7 +55,7 @@ class EmailFromOrder
 
         return $similar_titles;
     }
-    public function getOrderIdsFromProductTitles($productTitles) {
+    public function getOrderIdsFromProductTitles( $productTitles ) {
         $orderIds = array();
 
         // Prepare placeholders for the product titles

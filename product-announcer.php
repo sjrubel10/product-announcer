@@ -74,7 +74,6 @@ final class Product_Announcer {
      * @return void
      */
     public function init_plugin() {
-
         if ( is_admin() ) {
             new Product\Announcer\Admin();
         } else {

@@ -1,18 +1,23 @@
 <?php
-
 namespace Product\Announcer\Classes;
 
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+
+/*require_once '/PHPMailer/PHPMailer.php';
+require_once '/PHPMailer/SMTP.php';
+require_once '/PHPMailer/Exception.php';*/
+
 class Mail
 {
     public function __construct() {
+//        error_log( print_r( ['dir'=>__DIR__], true ) );
 
     }
     public function send_custom_mail( $receiver_mail, $subject, $product_title, $product_image_url, $product_description ) {
-
-        $mail = new PHPMailer(true);
+//        error_log( print_r( ['$receiver_mail'=>$receiver_mail], true ) );
+        $mail = new PHPMailer(true );
         try {
             $mail->isSMTP();
             // Configure SMTP settings here
