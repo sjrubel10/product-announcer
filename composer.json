@@ -1,0 +1,14 @@
+{
+    "name": "product/announcer",
+    "description": "ProductAnnounce is a versatile WordPress plugin designed to streamline product launches. It automatically sends email announcements to users when new products are created, ensuring timely communication and engagement.",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "autoload": {
+        "psr-4": {
+            "Product\\Announcer\\": "includes/"
+        },
+        "files": []
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
