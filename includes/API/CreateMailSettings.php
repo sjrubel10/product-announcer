@@ -2,6 +2,7 @@
 
 namespace Product\Announcer\API;
 
+use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -31,7 +32,25 @@ class CreateMailSettings extends WP_REST_Controller
     }
 
     public function create_send_mail_settings( $request ){
-        error_log( print_r( ['$request'=>$request->JSON], true ) );
+
+        $nonce = $request->get_header('X-WP-Nonce');
+        if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+            return new WP_Error( 'invalid_nonce', 'Invalid nonce.', array( 'status' => 403 ) );
+        }
+        // Get the form data from the request body
+        $form_data = $request->get_json_params();
+        unset($form_data['nonce']);
+
+        $options_name = 'PA_send_mail_settings';
+        $is_done = update_option( $options_name, $form_data);
+        // Return success response
+        if( $is_done ){
+            $message = 'Settings saved successfully.';
+        }else{
+            $message = 'Something Went Wrong!';
+        }
+        return rest_ensure_response($message );
+
     }
 
     public function get_item_permissions_check( $request ){

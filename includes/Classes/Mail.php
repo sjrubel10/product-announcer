@@ -4,11 +4,6 @@ namespace Product\Announcer\Classes;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-
-/*require_once '/PHPMailer/PHPMailer.php';
-require_once '/PHPMailer/SMTP.php';
-require_once '/PHPMailer/Exception.php';*/
-
 class Mail
 {
     public function __construct() {
@@ -29,23 +24,29 @@ class Mail
     }
     public function send_mail( $mail, $email, $subject, $product_title, $product_image_url, $product_description ) {
         // Configure SMTP settings here
-        $mail->Host       = 'smtp.gmail.com';      // Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                   // Enable SMTP authentication
-        $mail->Username   = 'rubel.webappick@gmail.com'; // SMTP username
-        $mail->Password   = 'mltoeloqaxlhcbde';    // SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Enable TLS encryption
-//        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;  // Enable SSL encryption
-        $mail->Port       = 587;                    // TCP port to connect to
-        // $mail->Port     = 465;                    // Use 465 for SMTPS port with SSL encryption
+        $send_mail_settings_data = get_option('PA_send_mail_settings');
+//        if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 && isset( $send_mail_settings_data['email'] ) && isset( $send_mail_settings_data['appkey'] ) ){
+        $mail_from = trim( $send_mail_settings_data['email'] );
+        $appkey = trim( $send_mail_settings_data['appkey'] );
+        $subject = trim( $send_mail_settings_data['subject'] );
+        $body_message = trim( $send_mail_settings_data['body_message'] );
+
+        $mail->Host       = 'smtp.gmail.com';                   // Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                               // Enable SMTP authentication
+        $mail->Username   = $mail_from;                         // SMTP username
+        $mail->Password   = $appkey;                            // SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;     // Enable TLS encryption
+//        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;      // Enable SSL encryption
+        $mail->Port       = 587;                                // TCP port to connect to
+        // $mail->Port     = 465;                               // Use 465 for SMTPS port with SSL encryption
 
         // Sender and recipient
-        $mail->setFrom('rubel.webappick@gmail.com', 'Rubel');
-        $mail->addAddress( $email );                  // Add a recipient
-
+        $mail->setFrom( $mail_from , 'Rubel');
+        $mail->addAddress( $email );                            // Add a recipient
         // Content
-        $mail->isHTML( true );                        // Set email format to HTML
+        $mail->isHTML( true );                                  // Set email format to HTML
         $mail->Subject = $subject;
-        $mail->Body = $this->generate_email_body( $product_title, $product_image_url, $product_description );
+        $mail->Body = $this->generate_email_body( $product_title, $product_image_url, $product_description, $body_message );
         ;
         $mail->AltBody = 'This is the plain text message body for non-HTML mail clients';
 
@@ -63,7 +64,9 @@ class Mail
      * @param string $product_description The description of the product.
      * @return string                     The generated email body HTML.
      */
-    public function generate_email_body($product_title, $product_image_url, $product_description) {
+    public function generate_email_body( $product_title, $product_image_url, $product_description, $body_message ) {
+
+//        $product_description = $body_message.'</br>'.$product_description;
         ob_start();
         ?>
         <!DOCTYPE html>
@@ -71,7 +74,7 @@ class Mail
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title><?php echo esc_html__('Product Details', 'your-textdomain'); ?></title>
+            <title><?php echo esc_html__('Product Details', 'product-announcer'); ?></title>
             <style>
                 /* Add your CSS styles here */
                 .product-container {
@@ -98,11 +101,11 @@ class Mail
         <body>
         <div class="product-container">
             <div>
-                <h2><?php echo esc_html__('Additional Information', 'your-textdomain'); ?></h2>
-                <p><?php echo esc_html__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et velit vitae nisl malesuada tristique.', 'your-textdomain'); ?></p>
+                <h2><?php echo esc_html__('Additional Information', 'product-announcer'); ?></h2>
+                <p><?php echo esc_html__( $body_message , 'product-announcer'); ?></p>
             </div>
             <div class="product-title"><?php echo esc_html($product_title); ?></div>
-            <img src="<?php echo esc_url($product_image_url); ?>" alt="<?php echo esc_attr__('Product Image', 'your-textdomain'); ?>" class="product-image">
+            <img src="<?php echo esc_url($product_image_url); ?>" alt="<?php echo esc_attr__('Product Image', 'product-announcer'); ?>" class="product-image">
             <div class="product-description"><?php echo esc_html($product_description); ?></div>
         </div>
         </body>

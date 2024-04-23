@@ -1,9 +1,22 @@
 <?php
-echo 'Hello World';
-$email = '';
-$appkey = '';
-$subject = '';
-$body_message = '';
+//echo 'Hello World';
+$form_data = get_option('PA_send_mail_settings');
+//error_log( print_r( ['$form_data' => $form_data], true ) );
+if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
+    $email = $form_data['email'];
+    $appkey = $form_data['appkey'];
+    $subject = $form_data['subject'];
+    $body_message = $form_data['body_message'];
+}else{
+    $email = '';
+    $appkey = '';
+    $subject = '';
+    $body_message = '';
+}
+// Access individual values from the array
+
+
+
 ?>
 
 <style>
@@ -57,19 +70,19 @@ $body_message = '';
     <h1>Email Settings</h1>
     <form method="post" action="" id="emailSettingsForm">
         <label for="email">From Email:</label>
-        <input type="text" id="email" name="email" value="<?php echo esc_attr($email); ?>"><br><br>
+        <input type="text" id="email" name="email" value="<?php echo esc_attr($email); ?>"><br>
 
         <label for="appkey">App Key:</label>
-        <input type="text" id="appkey" name="appkey" value="<?php echo esc_attr($appkey); ?>"><br><br>
+        <input type="text" id="appkey" name="appkey" value="<?php echo esc_attr($appkey); ?>"><br>
 
         <h2>Email Content</h2>
         <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" value="<?php echo esc_attr($subject); ?>"><br><br>
+        <input type="text" id="subject" name="subject" value="<?php echo esc_attr($subject); ?>"><br>
 
         <label for="body_message">Body Message:</label><br>
         <textarea id="body_message" name="body_message"><?php echo esc_textarea($body_message); ?></textarea><br><br>
 
-        <input type="submit" name="submit" value="Save">
+        <input type="submit" name="submit" value="Save Change">
     </form>
 </div>
 
@@ -79,7 +92,6 @@ $body_message = '';
         jQuery('#emailSettingsForm').submit(function(e) {
             e.preventDefault(); // Prevent form submission
 
-            alert('clicked');
             // Gather input field values into an object
             var formData = {
                 'email': jQuery('#email').val(),
@@ -102,7 +114,7 @@ $body_message = '';
                 data: JSON.stringify(formData),
                 success: function(response) {
                     // Handle success response
-                    console.log(response);
+                    alert(response);
                 },
                 error: function(xhr, status, error) {
                     // Handle error
