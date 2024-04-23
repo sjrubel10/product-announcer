@@ -39,5 +39,6 @@ class Menu {
      */
     public function plugin_page() {
         echo 'Hello World';
+//        require_once plugin_dir_path( __FILE__ ) . 'templates/createmailsettings.php';
     }
 }
