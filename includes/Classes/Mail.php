@@ -27,6 +27,7 @@ class Mail
         $send_mail_settings_data = get_option('PA_send_mail_settings');
 //        if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 && isset( $send_mail_settings_data['email'] ) && isset( $send_mail_settings_data['appkey'] ) ){
         $mail_from = trim( $send_mail_settings_data['email'] );
+        $mail_from_name = trim( $send_mail_settings_data['fromname'] );
         $appkey = trim( $send_mail_settings_data['appkey'] );
         $subject = trim( $send_mail_settings_data['subject'] );
         $body_message = trim( $send_mail_settings_data['body_message'] );
@@ -41,15 +42,15 @@ class Mail
         // $mail->Port     = 465;                               // Use 465 for SMTPS port with SSL encryption
 
         // Sender and recipient
-        $mail->setFrom( $mail_from , 'Rubel');
+        $mail->setFrom( $mail_from , $mail_from_name );
         $mail->addAddress( $email );                            // Add a recipient
         // Content
         $mail->isHTML( true );                                  // Set email format to HTML
         $mail->Subject = $subject;
         $mail->Body = $this->generate_email_body( $product_title, $product_image_url, $product_description, $body_message );
-        ;
         $mail->AltBody = 'This is the plain text message body for non-HTML mail clients';
 
+       
         // Send email
         $mail->send();
 

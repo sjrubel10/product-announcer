@@ -4,6 +4,7 @@ $form_data = get_option('PA_send_mail_settings');
 //error_log( print_r( ['$form_data' => $form_data], true ) );
 if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
     $email = $form_data['email'];
+    $fromname = $form_data['fromname'];
     $appkey = $form_data['appkey'];
     $subject = $form_data['subject'];
     $body_message = $form_data['body_message'];
@@ -12,7 +13,10 @@ if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
     $appkey = '';
     $subject = '';
     $body_message = '';
+    $fromname = '';
 }
+
+$mail_sent = 1;
 // Access individual values from the array
 
 
@@ -67,10 +71,17 @@ if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
     }
 </style>
 <div class="container">
+      <!-- Add the checkbox for toggling Mail Sent -->
+      <!-- <label for="mail_sent">Mail Sent:</label>
+      <input type="checkbox" id="mail_sent" name="mail_sent" <?php echo $mail_sent ? 'checked' : ''; ?>><br><br> -->
+
     <h1>Email Settings</h1>
     <form method="post" action="" id="emailSettingsForm">
         <label for="email">From Email:</label>
         <input type="text" id="email" name="email" value="<?php echo esc_attr($email); ?>"><br>
+
+        <label for="email">From Name:</label>
+        <input type="text" id="fromname" name="fromname" value="<?php echo esc_attr($fromname); ?>"><br>
 
         <label for="appkey">App Key:</label>
         <input type="text" id="appkey" name="appkey" value="<?php echo esc_attr($appkey); ?>"><br>
@@ -92,9 +103,10 @@ if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
         jQuery('#emailSettingsForm').submit(function(e) {
             e.preventDefault(); // Prevent form submission
 
-            // Gather input field values into an object
+            // Gather input field values into an object fromname
             var formData = {
                 'email': jQuery('#email').val(),
+                'fromname': jQuery('#fromname').val(),
                 'appkey': jQuery('#appkey').val(),
                 'subject': jQuery('#subject').val(),
                 'body_message': jQuery('#body_message').val()

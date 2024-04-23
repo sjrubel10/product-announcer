@@ -40,7 +40,6 @@ class CreateMailSettings extends WP_REST_Controller
         // Get the form data from the request body
         $form_data = $request->get_json_params();
         unset($form_data['nonce']);
-
         $options_name = 'PA_send_mail_settings';
         $is_done = update_option( $options_name, $form_data);
         // Return success response
