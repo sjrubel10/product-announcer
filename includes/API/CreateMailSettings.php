@@ -11,7 +11,7 @@ class CreateMailSettings extends WP_REST_Controller
     function __construct()
     {
         $this->namespace = 'createSettings/v1';
-        $this->rest_base = 'createSettings';
+        $this->rest_base = 'mail-settings';
     }
 
     public function register_routes()
@@ -31,7 +31,7 @@ class CreateMailSettings extends WP_REST_Controller
     }
 
     public function create_send_mail_settings( $request ){
-        error_log( print_r( ['Entry'=>'Here'], true ) );
+        error_log( print_r( ['$request'=>$request->JSON], true ) );
     }
 
     public function get_item_permissions_check( $request ){
