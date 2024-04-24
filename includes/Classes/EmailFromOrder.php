@@ -68,17 +68,25 @@ class EmailFromOrder
 
         // Prepare placeholders for the product titles
         $placeholders = array_fill(0, count($productTitles), '%s');
-        $placeholders = implode(',', $placeholders);
 
-        // Query to get the order IDs based on the product titles
-        $results = $wpdb->get_results(
-            $wpdb->prepare("
-                SELECT DISTINCT oi.order_id
-                FROM {$wpdb->prefix}woocommerce_order_items AS oi
-                INNER JOIN {$wpdb->prefix}posts AS p ON oi.order_id = p.ID
-                WHERE oi.order_item_name IN ( $placeholders )
-            ", $productTitles)
-        );
+        // Construct the placeholder string
+        $placeholder_string = implode(',', $placeholders);
+
+        // Generate an array of placeholders with product titles as values
+        $values = array_map(function($title) use ($wpdb) {
+            return $wpdb->esc_like( $title );
+        }, $productTitles);
+
+        // Construct the query using placeholders
+        $results = $wpdb->get_results( $wpdb->prepare("
+        SELECT DISTINCT oi.order_id
+        FROM {$wpdb->prefix}woocommerce_order_items AS oi
+        INNER JOIN {$wpdb->prefix}posts AS p ON oi.order_id = p.ID
+        WHERE oi.order_item_name IN ( $placeholder_string )
+    ", $values) );
+
+        // Execute the prepared query
+//        $results = $wpdb->get_results($query);
 
         // Extract order IDs from the results
         foreach ($results as $result) {
@@ -87,6 +95,8 @@ class EmailFromOrder
 
         return $orderIds;
     }
+
+
     /**
      * Retrieve order data from the database based on provided order IDs.
      *
