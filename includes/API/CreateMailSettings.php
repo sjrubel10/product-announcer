@@ -29,8 +29,41 @@ class CreateMailSettings extends WP_REST_Controller
                 ],
             ]
         );
+
+        register_rest_route(
+            $this->namespace,
+            '/is_mail_send',
+            [
+                [
+                    'methods' => WP_REST_Server::CREATABLE,
+                    'callback' => [$this, 'is_mail_send_check'],
+                    'permission_callback' => [$this, 'get_item_permissions_check'],
+                    'args' => [$this->get_collection_params()],
+                ],
+            ]
+        );
     }
 
+    public function is_mail_send_check( $request )
+    {
+        $nonce = $request->get_header('X-WP-Nonce');
+        if (!wp_verify_nonce($nonce, 'wp_rest')) {
+            return new WP_Error('invalid_nonce', 'Invalid nonce.', array('status' => 403));
+        }
+        $form_data = $request->get_json_params();
+        unset($form_data['nonce']);
+
+        $options_name = 'PA_mailSendChecked';
+        $is_done = update_option( $options_name, $form_data['PA_mailSendChecked'] );
+        // Return success response
+        if( $form_data['PA_mailSendChecked'] ) {
+            $message = 'You Give The Permission To Send Mail To The Users.';
+        }else{
+            $message = 'You Do Not Want To Send Mail.';
+        }
+
+        return $message;
+    }
     public function create_send_mail_settings( $request ){
 
         $nonce = $request->get_header('X-WP-Nonce');
@@ -41,9 +74,12 @@ class CreateMailSettings extends WP_REST_Controller
         $form_data = $request->get_json_params();
         unset($form_data['nonce']);
         $options_name = 'PA_send_mail_settings';
-        $is_done = update_option( $options_name, $form_data);
+        $is_done = update_option( $options_name, $form_data );
+
         // Return success response
         if( $is_done ){
+            $cache_key = 'PA_product_announce_mail_Setting';
+            wp_cache_set( $cache_key, $form_data, 'PA_send_mail_settings' );
             $message = 'Settings saved successfully.';
         }else{
             $message = 'Something Went Wrong!';
