@@ -28,18 +28,25 @@ class EmailFromOrder
 //        global $wpdb;
 
         // Escape the product title to prevent SQL injection
-        $product_title = $this->wpdb->esc_like($product_title);
 
         // Build the SQL query to retrieve similar product titles
-        $sql = "
+        /*$sql = "
         SELECT post_title
         FROM {$this->wpdb->posts}
         WHERE post_type = 'product'
         AND post_status = 'publish'
-    ";
+    ";*/
+        global $wpdb;
+        $product_title = $wpdb->esc_like($product_title);
+        $product_titles = $wpdb->get_col($wpdb->prepare("
+                SELECT post_title
+                FROM {$wpdb->posts}
+                WHERE post_type = %s
+                AND post_status = %s
+                ", 'product', 'publish'));
 
         // Execute the SQL query
-        $product_titles = $this->wpdb->get_col($sql);
+//        $product_titles = $wpdb->get_col($sql);
 
         // Find similar product titles based on Levenshtein distance
         $similar_titles = array();
@@ -56,6 +63,7 @@ class EmailFromOrder
         return $similar_titles;
     }
     public function getOrderIdsFromProductTitles( $productTitles ) {
+        global $wpdb;
         $orderIds = array();
 
         // Prepare placeholders for the product titles
@@ -63,11 +71,11 @@ class EmailFromOrder
         $placeholders = implode(',', $placeholders);
 
         // Query to get the order IDs based on the product titles
-        $results = $this->wpdb->get_results(
-            $this->wpdb->prepare("
+        $results = $wpdb->get_results(
+            $wpdb->prepare("
                 SELECT DISTINCT oi.order_id
-                FROM {$this->wpdb->prefix}woocommerce_order_items AS oi
-                INNER JOIN {$this->wpdb->prefix}posts AS p ON oi.order_id = p.ID
+                FROM {$wpdb->prefix}woocommerce_order_items AS oi
+                INNER JOIN {$wpdb->prefix}posts AS p ON oi.order_id = p.ID
                 WHERE oi.order_item_name IN ( $placeholders )
             ", $productTitles)
         );
@@ -86,18 +94,21 @@ class EmailFromOrder
      * @return array An array containing order data (id, billing_email, customer_id) for the given order IDs.
      */
     public function getOrdersData( $orderIds ) {
+        global $wpdb;
         $ordersData = array();
 
         // Prepare placeholders for the order IDs
         $placeholders = implode(',', array_fill(0, count($orderIds), '%d'));
 
         // Prepare and execute the SQL query
-        $query = $this->wpdb->prepare("
+        $results = $wpdb->get_results( $wpdb->prepare("
             SELECT `id`,`billing_email`,`customer_id`
-            FROM `{$this->wpdb->prefix}wc_orders`
-            WHERE `id` IN($placeholders)
-        ", $orderIds);
-        $results = $this->wpdb->get_results($query);
+            FROM `{$wpdb->prefix}wc_orders`
+            WHERE `id` IN( $placeholders )
+        ", $orderIds) );
+
+//        error_log( print_r( ['$query'=>$query], true ) );
+//        $results = $wpdb->get_results( $query );
 
         // Extract data from results
         foreach ($results as $result) {

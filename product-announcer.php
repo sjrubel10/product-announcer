@@ -6,7 +6,7 @@
  * Author: Rubel
  * Author URI: https://rubelmia.co
  * Text Domain: product-announcer
- * Version: 1.0
+ * Version: 1.0.0
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
