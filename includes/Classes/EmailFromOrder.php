@@ -24,7 +24,7 @@ class EmailFromOrder
         }
 
     }
-    public function find_similar_product_titles($product_title, $threshold = 0.6) {
+    public function find_similar_product_titles($product_title, $threshold ) {
 //        global $wpdb;
 
         // Escape the product title to prevent SQL injection
@@ -70,7 +70,7 @@ class EmailFromOrder
         $placeholders = array_fill(0, count($productTitles), '%s');
 
         // Construct the placeholder string
-        $placeholder_string = implode(',', $placeholders);
+        $placeholder_string = implode(',', $placeholders );
 
         // Generate an array of placeholders with product titles as values
         $values = array_map(function($title) use ($wpdb) {
@@ -106,8 +106,6 @@ class EmailFromOrder
     public function getOrdersData( $orderIds ) {
         global $wpdb;
         $ordersData = array();
-
-        // Prepare placeholders for the order IDs
         $placeholders = implode(',', array_fill(0, count($orderIds), '%d'));
 
         // Prepare and execute the SQL query
@@ -116,9 +114,6 @@ class EmailFromOrder
             FROM `{$wpdb->prefix}wc_orders`
             WHERE `id` IN( $placeholders )
         ", $orderIds) );
-
-//        error_log( print_r( ['$query'=>$query], true ) );
-//        $results = $wpdb->get_results( $query );
 
         // Extract data from results
         foreach ($results as $result) {

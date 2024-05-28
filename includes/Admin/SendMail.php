@@ -27,7 +27,7 @@ class SendMail
                 $product_description = $post->post_content;
 
 //            $product_categories = $this->emailFromOrder->get_product_categories( $post_id );
-                $similar_products = $this->emailFromOrder->find_similar_product_titles( $product_title );
+                $similar_products = $this->emailFromOrder->find_similar_product_titles( $product_title, 0.6 );
 
                 $orderIds = $ordersData = [];
                 if (count($similar_products) > 0) {

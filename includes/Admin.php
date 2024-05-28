@@ -2,6 +2,7 @@
 
 namespace Product\Announcer;
 
+use Product\Announcer\Admin\Enque;
 use Product\Announcer\Admin\Menu;
 use Product\Announcer\Admin\SendMail;
 
@@ -15,6 +16,7 @@ class Admin {
      */
     function __construct() {
         new Menu();
+        new Enque();
         new SendMail();
     }
 }
