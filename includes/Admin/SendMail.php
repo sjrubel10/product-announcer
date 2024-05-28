@@ -27,18 +27,21 @@ class SendMail
                 $product_description = $post->post_content;
 
 //            $product_categories = $this->emailFromOrder->get_product_categories( $post_id );
-                $similar_products = $this->emailFromOrder->find_similar_product_titles( $product_title, 0.6 );
+//            $similar_products = $this->emailFromOrder->find_similar_product_titles( $product_title, 0.6 );
 
-                $orderIds = $ordersData = [];
-                if (count($similar_products) > 0) {
-                    $orderIds = $this->emailFromOrder->getOrderIdsFromProductTitles( $similar_products );
-                }
-                if (count($orderIds) > 0) {
-                    $ordersData = $this->emailFromOrder->getOrdersData( $orderIds );
-                    if( is_array( $ordersData ) && count( $ordersData )> 0 && isset( $data['billing_email'] ) ){
-                        foreach ( $ordersData as $data ){
-                            $send_mails = $data['billing_email'];
-                            $mailSend = $this->mail->send_custom_mail( $send_mails, 'mail subject', $product_title, $product_image_url, $product_description);
+                $orderIds = $orders_data = [];
+//                if ( count( $similar_products ) > 0) {
+                    $orderIds = $this->emailFromOrder->getOrderIdsFromProductTitles( $product_title );
+//                }
+                if ( count( $orderIds ) > 0 ) {
+                    $orders_data = $this->emailFromOrder->getOrdersData( $orderIds );
+                    if( is_array( $orders_data ) && count( $orders_data ) > 0 ){
+                        foreach ( $orders_data as $data ){
+                            if( isset( $data['billing_email'] ) ) {
+                                $send_mails = $data['billing_email'];
+                                error_log( print_r( ['$send_mails' => $send_mails], true ) );
+                                $mailSend = $this->mail->send_custom_mail( $send_mails, 'mail subject', $product_title, $product_image_url, $product_description);
+                            }
                         }
                     }
                 }

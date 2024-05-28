@@ -16,7 +16,7 @@ class Mail
         try {
             $mail->isSMTP();
             // Configure SMTP settings here
-            $is_mail_sent = $this->send_mail( $mail, $receiver_mail, $subject, $product_title, $product_image_url, $product_description );
+//            $is_mail_sent = $this->send_mail( $mail, $receiver_mail, $subject, $product_title, $product_image_url, $product_description );
             return 'Email sent successfully';
         } catch (Exception $e) {
             return "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";

@@ -7,16 +7,13 @@ use WP_REST_Controller;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class CreateMailSettings extends WP_REST_Controller
-{
-    function __construct()
-    {
+class CreateMailSettings extends WP_REST_Controller{
+    function __construct(){
         $this->namespace = 'createSettings/v1';
         $this->rest_base = 'mail-settings';
     }
 
-    public function register_routes()
-    {
+    public function register_routes(){
         register_rest_route(
             $this->namespace,
             '/create_mail_setting',
@@ -44,19 +41,17 @@ class CreateMailSettings extends WP_REST_Controller
         );
     }
 
-    public function is_mail_send_check( $request )
-    {
+    public function is_mail_send_check( $request ){
         $nonce = $request->get_header('X-WP-Nonce');
         if (!wp_verify_nonce($nonce, 'wp_rest')) {
             return new WP_Error('invalid_nonce', 'Invalid nonce.', array('status' => 403));
         }
         $form_data = $request->get_json_params();
         unset($form_data['nonce']);
-
         $options_name = 'PA_mailSendChecked';
-        $is_done = update_option( $options_name, $form_data['PA_mailSendChecked'] );
+        $is_done = update_option( $options_name, sanitize_text_field( $form_data['PA_mailSendChecked'] ) );
         // Return success response
-        if( $form_data['PA_mailSendChecked'] ) {
+        if( $is_done ) {
             $message = 'You Give The Permission To Send Mail To The Users.';
         }else{
             $message = 'You Do Not Want To Send Mail.';
@@ -65,18 +60,26 @@ class CreateMailSettings extends WP_REST_Controller
         return $message;
     }
     public function create_send_mail_settings( $request ){
-
-        $nonce = $request->get_header('X-WP-Nonce');
+        $nonce = sanitize_text_field( $request->get_header('X-WP-Nonce') );
         if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
             return new WP_Error( 'invalid_nonce', 'Invalid nonce.', array( 'status' => 403 ) );
         }
-        // Get the form data from the request body
         $form_data = $request->get_json_params();
-        unset($form_data['nonce']);
+        unset( $form_data['nonce'] );
+        $sender_email = sanitize_email( $form_data['email'] );
+        $sender_name = sanitize_text_field( $form_data['fromname'] );
+        $app_key = sanitize_text_field( $form_data['appkey'] );
+        $email_subject = sanitize_text_field( $form_data['subject'] );
+        $email_body = sanitize_text_field( $form_data['body_message'] );
+        $settings_data = array(
+                            'email' => $sender_email,
+                            'fromname' => $sender_name,
+                            'appkey' => $app_key,
+                            'subject' => $email_subject,
+                            'body_message' => $email_body,
+                        );
         $options_name = 'PA_send_mail_settings';
-        $is_done = update_option( $options_name, $form_data );
-
-        // Return success response
+        $is_done = update_option( $options_name, maybe_serialize( $settings_data ) );
         if( $is_done ){
             $cache_key = 'PA_product_announce_mail_Setting';
             wp_cache_set( $cache_key, $form_data, 'PA_send_mail_settings' );
@@ -84,14 +87,15 @@ class CreateMailSettings extends WP_REST_Controller
         }else{
             $message = 'Something Went Wrong!';
         }
-        return rest_ensure_response($message );
 
+        return rest_ensure_response($message );
     }
 
     public function get_item_permissions_check( $request ){
         if( current_user_can( 'manage_options' ) ){
             return true;
         }
+
         return false;
     }
 }

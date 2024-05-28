@@ -4,10 +4,8 @@
 $cache_key = 'PA_product_announce_mail_Setting';
 $form_data = wp_cache_get( $cache_key, 'PA_send_mail_settings' );
 if( empty( $form_data ) && !is_array( $form_data ) ){
-    $form_data = get_option('PA_send_mail_settings');
+    $form_data = maybe_unserialize( get_option('PA_send_mail_settings') );
 }
-
-//error_log( print_r( ['$form_data' => $form_data], true ) );
 if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
     $email = $form_data['email'] ?? " ";
     $fromname = $form_data['fromname'] ?? "";
@@ -45,20 +43,20 @@ if( $mail_send_checked ){
     <h1>Email Settings</h1>
     <form method="post" action="" id="emailSettingsForm">
         <label for="email">From Email:</label>
-        <input type="text" id="email" name="email" value="<?php echo esc_attr($email); ?>"><br>
+        <input type="text" id="email" name="email" value="<?php echo esc_attr( $email ); ?>"><br>
 
         <label for="email">From Name:</label>
-        <input type="text" id="fromname" name="fromname" value="<?php echo esc_attr($fromname); ?>"><br>
+        <input type="text" id="fromname" name="fromname" value="<?php echo esc_attr( $fromname ); ?>"><br>
 
         <label for="appkey">App Key:</label>
-        <input type="text" id="appkey" name="appkey" value="<?php echo esc_attr($appkey); ?>"><br>
+        <input type="text" id="appkey" name="appkey" value="<?php echo esc_attr( $appkey ); ?>"><br>
 
         <h2>Email Content</h2>
         <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" value="<?php echo esc_attr($subject); ?>"><br>
+        <input type="text" id="subject" name="subject" value="<?php echo esc_attr( $subject ); ?>"><br>
 
         <label for="body_message">Body Message:</label><br>
-        <textarea id="body_message" name="body_message"><?php echo esc_textarea($body_message); ?></textarea><br><br>
+        <textarea id="body_message" name="body_message"><?php echo esc_textarea( $body_message ); ?></textarea><br><br>
 
         <input type="submit" name="submit" value="Save Change">
 

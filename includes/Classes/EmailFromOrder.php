@@ -17,26 +17,14 @@ class EmailFromOrder
             foreach ($product_categories as $category) {
                 $category_names[] = $category->name;
             }
-            error_log( print_r( ['$category_names'=>$category_names], true ) );
             return $category_names;
         } else {
             return false;
         }
 
     }
-    public function find_similar_product_titles($product_title, $threshold ) {
-//        global $wpdb;
-
-        // Escape the product title to prevent SQL injection
-
-        // Build the SQL query to retrieve similar product titles
-        /*$sql = "
-        SELECT post_title
-        FROM {$this->wpdb->posts}
-        WHERE post_type = 'product'
-        AND post_status = 'publish'
-    ";*/
-        global $wpdb;
+    public function find_similar_product_titles( $product_title, $threshold ) {
+        /*global $wpdb;
         $product_title = $wpdb->esc_like($product_title);
         $product_titles = $wpdb->get_col($wpdb->prepare("
                 SELECT post_title
@@ -44,11 +32,6 @@ class EmailFromOrder
                 WHERE post_type = %s
                 AND post_status = %s
                 ", 'product', 'publish'));
-
-        // Execute the SQL query
-//        $product_titles = $wpdb->get_col($sql);
-
-        // Find similar product titles based on Levenshtein distance
         $similar_titles = array();
         foreach ($product_titles as $title) {
             $distance = levenshtein($product_title, $title);
@@ -58,42 +41,45 @@ class EmailFromOrder
             if ($similarity_ratio >= $threshold) {
                 $similar_titles[] = $title;
             }
-        }
+        }*/
+        $similar_titles = array();
 
         return $similar_titles;
     }
-    public function getOrderIdsFromProductTitles( $productTitles ) {
-        global $wpdb;
+    public function getOrderIdsFromProductTitles_old( $productTitles ) {
         $orderIds = array();
+        /*global $wpdb;
 
-        // Prepare placeholders for the product titles
         $placeholders = array_fill(0, count($productTitles), '%s');
-
-        // Construct the placeholder string
         $placeholder_string = implode(',', $placeholders );
-
-        // Generate an array of placeholders with product titles as values
         $values = array_map(function($title) use ($wpdb) {
             return $wpdb->esc_like( $title );
         }, $productTitles);
-
-        // Construct the query using placeholders
         $results = $wpdb->get_results( $wpdb->prepare("
         SELECT DISTINCT oi.order_id
         FROM {$wpdb->prefix}woocommerce_order_items AS oi
         INNER JOIN {$wpdb->prefix}posts AS p ON oi.order_id = p.ID
         WHERE oi.order_item_name IN ( $placeholder_string )
     ", $values) );
-
-        // Execute the prepared query
-//        $results = $wpdb->get_results($query);
-
-        // Extract order IDs from the results
         foreach ($results as $result) {
             $orderIds[] = $result->order_id;
-        }
+        }*/
 
         return $orderIds;
+    }
+
+    function getOrderIdsFromProductTitles( $product_title ) {
+        global $wpdb;
+
+        $query = $wpdb->prepare(
+            "SELECT DISTINCT order_id 
+        FROM {$wpdb->prefix}woocommerce_order_items
+        WHERE order_item_name LIKE %s",
+            '%' . $wpdb->esc_like( $product_title ) . '%'
+        );
+        $order_ids = $wpdb->get_col( $query );
+
+        return array_unique( $order_ids );
     }
 
 
@@ -103,10 +89,10 @@ class EmailFromOrder
      * @param array $orderIds An array of order IDs.
      * @return array An array containing order data (id, billing_email, customer_id) for the given order IDs.
      */
-    public function getOrdersData( $orderIds ) {
-        global $wpdb;
+    public function getOrdersData( $order_ids ) {
+        /*global $wpdb;
         $ordersData = array();
-        $placeholders = implode(',', array_fill(0, count($orderIds), '%d'));
+        $placeholders = implode(',', array_fill(0, count( $order_ids), '%d'));
 
         // Prepare and execute the SQL query
         $results = $wpdb->get_results( $wpdb->prepare("
@@ -117,14 +103,30 @@ class EmailFromOrder
 
         // Extract data from results
         foreach ($results as $result) {
-            $ordersData[] = array(
+            $orders_data[] = array(
                 'id' => $result->id,
                 'billing_email' => $result->billing_email,
                 'customer_id' => $result->customer_id
             );
+        }*/
+        foreach ( $order_ids as $order_id ) {
+            $order = wc_get_order( $order_id );
+            if ( $order ) {
+                $orders_data[] = array(
+                    'order_id' => $order->get_id(),
+                    'order_date' => $order->get_date_created()->date('Y-m-d H:i:s'),
+                    'order_status' => $order->get_status(),
+                    'total' => $order->get_total(),
+                    'billing_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+                    'billing_email' => $order->get_billing_email(),
+                    'billing_phone' => $order->get_billing_phone(),
+                    'shipping_name' => $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name(),
+                    'items' => array(),
+                );
+            }
         }
 
-        return $ordersData;
+        return $orders_data;
     }
 
 
