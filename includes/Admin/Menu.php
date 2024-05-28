@@ -28,6 +28,15 @@ class Menu {
             [ $this, 'plugin_page' ], // Callback function to render the page
             'dashicons-megaphone' // Icon
         );
+
+        add_submenu_page(
+            'product-announcer',                       // Parent slug
+            __( 'Settings', 'product-announcer' ),    // Page title
+            __( 'Settings', 'product-announcer' ),    // Menu title
+            'manage_options',                      // Capability
+            'pa_settings',              // Menu slug
+            [ $this,'product_announcer_setting'],       // Function to display submenu 1 page
+        );
     }
 
 
@@ -39,5 +48,8 @@ class Menu {
      */
     public function plugin_page() {
         require_once plugin_dir_path( __FILE__ ) . 'templates/createmailsettings.php';
+    }
+    public function product_announcer_setting() {
+        require_once plugin_dir_path( __FILE__ ) . 'templates/settings.php';
     }
 }

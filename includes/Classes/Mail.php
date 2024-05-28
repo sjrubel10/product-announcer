@@ -103,7 +103,7 @@ class Mail
         <div class="product-container">
             <div>
                 <h2><?php echo esc_html__('Additional Information', 'product-announcer'); ?></h2>
-                <p><?php echo esc_html__( $body_message , 'product-announcer'); ?></p>
+                <p><?php echo esc_html( $body_message ); ?></p>
             </div>
             <div class="product-title"><?php echo esc_html($product_title); ?></div>
             <img src="<?php echo esc_url($product_image_url); ?>" alt="<?php echo esc_attr__('Product Image', 'product-announcer'); ?>" class="product-image">

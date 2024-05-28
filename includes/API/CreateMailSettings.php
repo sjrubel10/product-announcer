@@ -43,7 +43,7 @@ class CreateMailSettings extends WP_REST_Controller{
 
     public function is_mail_send_check( $request ){
         $nonce = $request->get_header('X-WP-Nonce');
-        if (!wp_verify_nonce($nonce, 'wp_rest')) {
+        if (!wp_verify_nonce( $nonce, 'wp_rest' ) ) {
             return new WP_Error('invalid_nonce', 'Invalid nonce.', array('status' => 403));
         }
         $form_data = $request->get_json_params();

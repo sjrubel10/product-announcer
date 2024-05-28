@@ -33,7 +33,7 @@ if( $mail_send_checked ){
 </head>
 <div class="PA_ProductAnnouncer_container">
     <div class="mailSendNoOff">
-        <span class="mailPermissionText" id="PA_mailPermissionText"><?php esc_attr_e( $text, 'product-announcer' ); ?></span>
+        <span class="mailPermissionText" id="PA_mailPermissionText"><?php esc_attr( $text ); ?></span>
         <div class="checkbox-wrapper-8">
             <input type="checkbox" name="PA_mailSendChecked" class="tgl tgl-skewed PA_mailSendChecked" id="PA_mailSendChecked" <?php echo esc_attr( $mail_send_checked ) ? 'checked' : ''; ?>/>
             <label class="tgl-btn" data-tg-off="<?php esc_attr_e( 'OFF', 'product-announcer' ); ?>" data-tg-on="<?php esc_attr_e( 'ON', 'product-announcer' ); ?>" for="PA_mailSendChecked"></label>
