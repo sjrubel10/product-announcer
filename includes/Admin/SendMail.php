@@ -26,6 +26,7 @@ class SendMail
                 $product_image_url = 'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
                 $product_description = $post->post_content;
 
+                $send_mails = [];
 //            $product_categories = $this->emailFromOrder->get_product_categories( $post_id );
 //            $similar_products = $this->emailFromOrder->find_similar_product_titles( $product_title, 0.6 );
 
@@ -38,11 +39,18 @@ class SendMail
                     if( is_array( $orders_data ) && count( $orders_data ) > 0 ){
                         foreach ( $orders_data as $data ){
                             if( isset( $data['billing_email'] ) ) {
-                                $send_mails = $data['billing_email'];
-                                error_log( print_r( ['$send_mails' => $send_mails], true ) );
-                                $mailSend = $this->mail->send_custom_mail( $send_mails, 'mail subject', $product_title, $product_image_url, $product_description);
+                                $send_mails[] = $data['billing_email'];
                             }
                         }
+
+                        $send_mails = array_values( array_unique( $send_mails ) );
+                        error_log( print_r( ['$send_mails' => $send_mails], true ) );
+
+                        if( count( $send_mails ) > 0){
+//                            $send_mails = 'rubelcuet10@gmail.com';
+                            $mailSend = $this->mail->send_custom_mail( $send_mails, 'mail subject', $product_title, $product_image_url, $product_description);
+                        }
+
                     }
                 }
             }

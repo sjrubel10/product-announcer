@@ -40,15 +40,18 @@ jQuery(document).ready(function() {
 
         // Gather input field values into an object fromname
         var formData = {
-            'email': jQuery('#email').val(),
-            'fromname': jQuery('#fromname').val(),
-            'appkey': jQuery('#appkey').val(),
-            'subject': jQuery('#subject').val(),
-            'body_message': jQuery('#body_message').val()
+            'email': jQuery('#email').val().trim(),
+            'email_host': jQuery('#email_host').val().trim(),
+            'fromname': jQuery('#fromname').val().trim(),
+            'appkey': jQuery('#appkey').val().trim(),
+            'subject': jQuery('#subject').val().trim(),
+            'body_message': jQuery('#body_message').val().trim(),
         };
 
+        // console.log( formData );
+
         formData.nonce = getNonce;
-        alert( formData.nonce );
+        // alert( formData.nonce );
         let path ='http://localhost:8888/ctx-test/wp-json/createSettings/v1/create_mail_setting';
         let type = 'POST';
         set_settings_data( formData, type , path );

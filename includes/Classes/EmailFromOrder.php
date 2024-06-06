@@ -23,65 +23,21 @@ class EmailFromOrder
         }
 
     }
-    public function find_similar_product_titles( $product_title, $threshold ) {
-        /*global $wpdb;
-        $product_title = $wpdb->esc_like($product_title);
-        $product_titles = $wpdb->get_col($wpdb->prepare("
-                SELECT post_title
-                FROM {$wpdb->posts}
-                WHERE post_type = %s
-                AND post_status = %s
-                ", 'product', 'publish'));
-        $similar_titles = array();
-        foreach ($product_titles as $title) {
-            $distance = levenshtein($product_title, $title);
-            $length = max(strlen($product_title), strlen($title));
-            $similarity_ratio = 1 - ($distance / $length);
-
-            if ($similarity_ratio >= $threshold) {
-                $similar_titles[] = $title;
-            }
-        }*/
-        $similar_titles = array();
-
-        return $similar_titles;
-    }
-    public function getOrderIdsFromProductTitles_old( $productTitles ) {
-        $orderIds = array();
-        /*global $wpdb;
-
-        $placeholders = array_fill(0, count($productTitles), '%s');
-        $placeholder_string = implode(',', $placeholders );
-        $values = array_map(function($title) use ($wpdb) {
-            return $wpdb->esc_like( $title );
-        }, $productTitles);
-        $results = $wpdb->get_results( $wpdb->prepare("
-        SELECT DISTINCT oi.order_id
-        FROM {$wpdb->prefix}woocommerce_order_items AS oi
-        INNER JOIN {$wpdb->prefix}posts AS p ON oi.order_id = p.ID
-        WHERE oi.order_item_name IN ( $placeholder_string )
-    ", $values) );
-        foreach ($results as $result) {
-            $orderIds[] = $result->order_id;
-        }*/
-
-        return $orderIds;
-    }
 
     function getOrderIdsFromProductTitles( $product_title ) {
         global $wpdb;
 
+        // Escape the product title for LIKE query
+        $like_product_title = '%' . $wpdb->esc_like( $product_title ) . '%';
+
+        // Prepare the query using a placeholder
         $query = $wpdb->prepare(
-            "SELECT DISTINCT order_id 
-        FROM {$wpdb->prefix}woocommerce_order_items
-        WHERE order_item_name LIKE %s",
-            '%' . $wpdb->esc_like( $product_title ) . '%'
+            "SELECT DISTINCT order_id FROM {$wpdb->prefix}woocommerce_order_items WHERE order_item_name LIKE %s",
+            $like_product_title
         );
         $order_ids = $wpdb->get_col( $query );
-
         return array_unique( $order_ids );
     }
-
 
     /**
      * Retrieve order data from the database based on provided order IDs.

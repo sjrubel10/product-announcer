@@ -3,17 +3,20 @@
 
 $cache_key = 'PA_product_announce_mail_Setting';
 $form_data = wp_cache_get( $cache_key, 'PA_send_mail_settings' );
+
 if( empty( $form_data ) && !is_array( $form_data ) ){
     $form_data = maybe_unserialize( get_option('PA_send_mail_settings') );
 }
 if( !empty( $form_data ) && is_array( $form_data ) && count( $form_data ) > 0 ){
     $email = $form_data['email'] ?? " ";
+    $email_host = $form_data['email_host'] ?? " ";
     $fromname = $form_data['fromname'] ?? "";
     $appkey = $form_data['appkey'] ?? "";
     $subject = $form_data['subject'] ?? "";
     $body_message = $form_data['body_message'] ?? "";
 }else{
     $email = '';
+    $email_host = '';
     $appkey = '';
     $subject = '';
     $body_message = '';
@@ -44,6 +47,9 @@ if( $mail_send_checked ){
     <form method="post" action="" id="emailSettingsForm">
         <label for="email">From Email:</label>
         <input type="text" id="email" name="email" value="<?php echo esc_attr( $email ); ?>"><br>
+
+        <label for="email_host">Email Host Name:</label>
+        <input type="text" id="email_host" name="email_host" value="<?php echo esc_attr( $email_host ); ?>"><br>
 
         <label for="email">From Name:</label>
         <input type="text" id="fromname" name="fromname" value="<?php echo esc_attr( $fromname ); ?>"><br>

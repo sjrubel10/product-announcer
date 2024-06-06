@@ -66,13 +66,16 @@ class CreateMailSettings extends WP_REST_Controller{
         }
         $form_data = $request->get_json_params();
         unset( $form_data['nonce'] );
+
         $sender_email = sanitize_email( $form_data['email'] );
+        $email_host = sanitize_text_field( $form_data['email_host'] );
         $sender_name = sanitize_text_field( $form_data['fromname'] );
         $app_key = sanitize_text_field( $form_data['appkey'] );
         $email_subject = sanitize_text_field( $form_data['subject'] );
         $email_body = sanitize_text_field( $form_data['body_message'] );
         $settings_data = array(
                             'email' => $sender_email,
+                            'email_host' => $email_host,
                             'fromname' => $sender_name,
                             'appkey' => $app_key,
                             'subject' => $email_subject,
