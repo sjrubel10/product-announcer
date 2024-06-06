@@ -12,7 +12,7 @@
  * Version: 1.0.0
  * Requires PHP: 7.4
  * Tags: product, announcer, email, notifier, notification
- * Text Domain: "product-announcer"
+ * Text Domain: product-announcer
  * Domain Path: /languages
  * WC requires at least: 3.6
  * WC tested up to: 8.2.0
