@@ -1,5 +1,4 @@
 <?php
-//echo 'Hello World';
 
 $cache_key = 'PA_product_announce_mail_Setting';
 $form_data = wp_cache_get( $cache_key, 'PA_send_mail_settings' );

@@ -1,6 +1,8 @@
 jQuery(document).ready(function() {
 
     var getNonce = jQuery("#PA_createNonce").val();
+    var domainName = window.location.origin;
+    // alert( domainName );
     function set_settings_data( formData, type, path ){
         jQuery.ajax({
             type: type,
@@ -29,10 +31,10 @@ jQuery(document).ready(function() {
         isMailSendData.nonce = getNonce;
         isMailSendData.PA_mailSendChecked = value;
 
-        let path ='http://localhost:8888/ctx-test/wp-json/createSettings/v1/is_mail_send';
+        // let path ='http://localhost:8888/ctx-test/wp-json/createSettings/v1/is_mail_send';
+        let path= domainName+'/wp-json/createSettings/v1/is_mail_send';
         let type = 'POST';
         set_settings_data( isMailSendData, type , path );
-        console.log( isMailSendData );
     });
 
     jQuery('#emailSettingsForm').submit(function(e) {
@@ -48,11 +50,9 @@ jQuery(document).ready(function() {
             'body_message': jQuery('#body_message').val().trim(),
         };
 
-        // console.log( formData );
-
         formData.nonce = getNonce;
         // alert( formData.nonce );
-        let path ='http://localhost:8888/ctx-test/wp-json/createSettings/v1/create_mail_setting';
+        let path = domainName+'/mailsend/wp-json/createSettings/v1/create_mail_setting';
         let type = 'POST';
         set_settings_data( formData, type , path );
         // Send the data to the custom REST API endpoint

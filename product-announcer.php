@@ -1,14 +1,21 @@
 <?php
 /**
  * Plugin Name: Product Announcer
- * Description: Product Announcer sends automatic email notifications for new product creations on your WordPress site. Customize emails to match your brand and enhance user engagement. Integrated with the WordPress dashboard, it ensures users stay informed without missing updates.
+ * Description: Stay informed and keep your users engaged with automatic email notifications whenever a new product is created on your WordPress website.
  * Plugin URI: https://product-announcer.co
- * Author: Rubel
- * Author URI: https://rubelmia.co
- * Text Domain: product-announcer
+ * Requires at least: WP 4.9
+ * Tested up to: WP 6.4
+ * Author: sjrubel10
+ * License:     GPL v2
+ * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * Author URI: https://profiles.wordpress.org/sjrubel10/
  * Version: 1.0.0
- * License: GPL2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires PHP: 7.4
+ * Tags: product, announcer, email, notifier, notification
+ * Text Domain: "product-announcer"
+ * Domain Path: /languages
+ * WC requires at least: 3.6
+ * WC tested up to: 8.2.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

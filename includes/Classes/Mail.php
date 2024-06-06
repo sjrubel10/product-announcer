@@ -6,16 +6,11 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 class Mail
 {
-    public function __construct() {
-//        error_log( print_r( ['dir'=>__DIR__], true ) );
-
-    }
+    public function __construct() {}
     public function send_custom_mail( $receiver_mail, $subject, $product_title, $product_image_url, $product_description ) {
-//        error_log( print_r( ['$receiver_mail'=>$receiver_mail], true ) );
         $mail = new PHPMailer(true );
         try {
             $mail->isSMTP();
-            // Configure SMTP settings here
             $is_mail_sent = $this->send_mail( $mail, $receiver_mail, $subject, $product_title, $product_image_url, $product_description );
             return 'Email sent successfully';
         } catch (Exception $e) {
@@ -23,7 +18,6 @@ class Mail
         }
     }
     public function send_mail( $mail, $receiver_emails, $subject, $product_title, $product_image_url, $product_description ) {
-        // Configure SMTP settings here
         $send_mail_settings_data = maybe_unserialize( get_option('PA_send_mail_settings' ) );
         if( !empty( $send_mail_settings_data ) && is_array( $send_mail_settings_data ) && count( $send_mail_settings_data ) > 0 && isset( $send_mail_settings_data['email'] ) && isset( $send_mail_settings_data['email_host'] ) && isset( $send_mail_settings_data['appkey'] ) ) {
             $mail_from = trim($send_mail_settings_data['email']);
@@ -51,8 +45,6 @@ class Mail
             $mail->AltBody = 'This is the plain text message body for non-HTML mail clients';
 
             // Send email
-//          $mail->addAddress( $receiver_emails, 'Name' );                            // Add a recipient
-//          $mail->send();
             foreach ($receiver_emails as $recipient ) {
                 if ($mail_from !== $recipient) {
                     $mail->clearAddresses(); // Clear all recipients for the next iteration
@@ -75,8 +67,6 @@ class Mail
      * @return string                     The generated email body HTML.
      */
     public function generate_email_body( $product_title, $product_image_url, $product_description, $body_message ) {
-
-//        $product_description = $body_message.'</br>'.$product_description;
         ob_start();
         ?>
         <!DOCTYPE html>
