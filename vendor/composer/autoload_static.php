@@ -10,7 +10,6 @@ class ComposerStaticInit30c970b69b02682aaf513a4331563603
         'P' => 
         array (
             'Product\\Announcer\\' => 18,
-            'PHPMailer\\PHPMailer\\' => 20,
         ),
     );
 
@@ -18,10 +17,6 @@ class ComposerStaticInit30c970b69b02682aaf513a4331563603
         'Product\\Announcer\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
-        ),
-        'PHPMailer\\PHPMailer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
     );
 

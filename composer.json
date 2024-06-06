@@ -10,7 +10,5 @@
         "files": []
     },
     "minimum-stability": "dev",
-    "require": {
-        "phpmailer/phpmailer": "^6.9"
-    }
+    "require": {}
 }

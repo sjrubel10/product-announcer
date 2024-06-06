@@ -42,12 +42,8 @@ class SendMail
                                 $send_mails[] = $data['billing_email'];
                             }
                         }
-
                         $send_mails = array_values( array_unique( $send_mails ) );
-                        error_log( print_r( ['$send_mails' => $send_mails], true ) );
-
                         if( count( $send_mails ) > 0){
-//                            $send_mails = 'rubelcuet10@gmail.com';
                             $mailSend = $this->mail->send_custom_mail( $send_mails, 'mail subject', $product_title, $product_image_url, $product_description);
                         }
 

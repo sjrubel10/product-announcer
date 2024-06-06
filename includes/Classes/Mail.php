@@ -4,6 +4,12 @@ namespace Product\Announcer\Classes;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+
+if ( ! class_exists( 'PHPMailer\PHPMailer\PHPMailer' ) ) {
+    require_once( ABSPATH . WPINC . '/PHPMailer/PHPMailer.php' );
+    require_once( ABSPATH . WPINC . '/PHPMailer/Exception.php' );
+    require_once( ABSPATH . WPINC . '/PHPMailer/SMTP.php' );
+}
 class Mail
 {
     public function __construct() {}

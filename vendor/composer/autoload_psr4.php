@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Product\\Announcer\\' => array($baseDir . '/includes'),
-    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
 );
