@@ -13,7 +13,7 @@ class Enque{
     }
 
     public function include_css_files(){
-        wp_enqueue_style('PA_ProductAnnouncer_mailSettings', PA_ProductAnnouncer_ASSETS . 'css/createmailsettings.css', array(), WOOBEMP_VERSION );
+        wp_enqueue_style('PA_ProductAnnouncer_mailSettings', PA_ProductAnnouncer_ASSETS . 'css/createmailsettings.css', array(), PA_ProductAnnouncer_VERSION );
     }
 
     public function include_js_files(){

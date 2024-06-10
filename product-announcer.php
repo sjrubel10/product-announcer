@@ -72,6 +72,7 @@ final class Product_Announcer {
         define( 'PA_ProductAnnouncer_VERSION', self::version );
         define( 'PA_ProductAnnouncer_FILE', __FILE__ );
         define( 'PA_ProductAnnouncer_PATH', __DIR__ );
+        define( 'WOOBEMP_API_LINK', PA_ProductAnnouncer_FILE . 'api/' );
         define( 'PA_ProductAnnouncer_URL', plugins_url( '', PA_ProductAnnouncer_FILE ) );
         define( 'PA_ProductAnnouncer_ASSETS', PA_ProductAnnouncer_URL . '/assets/' );
         define( 'PA_ProductAnnouncer_PLUGIN_NAME', plugin_basename(__FILE__ ) );
